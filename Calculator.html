@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator with Comma Formatting</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
+
+        #calculator {
+            width: 250px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+
+        #display {
+            width: calc(100% - 22px);
+            height: 40px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        #buttons button {
+            width: 23%;
+            height: 40px;
+            margin: 1%;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #buttons button.operation {
+            background-color: #f0f0f0;
+        }
+
+        #buttons button.number {
+            background-color: #e7e7e7;
+        }
+
+        #buttons button.equals {
+            width: 48%;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #buttons button.clear {
+            width: 48%;
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <input type="text" id="display" disabled>
+        <div id="buttons">
+            <!-- Number and Operation buttons -->
+            <button class="number" onclick="appendNumber('1')">1</button>
+            <button class="number" onclick="appendNumber('2')">2</button>
+            <button class="number" onclick="appendNumber('3')">3</button>
+            <button class="number" onclick="appendNumber('4')">4</button>
+            <button class="number" onclick="appendNumber('5')">5</button>
+            <button class="number" onclick="appendNumber('6')">6</button>
+            <button class="number" onclick="appendNumber('7')">7</button>
+            <button class="number" onclick="appendNumber('8')">8</button>
+            <button class="number" onclick="appendNumber('9')">9</button>
+            <button class="number" onclick="appendNumber('0')">0</button>
+            <button class="operation" onclick="appendOperation('+')">+</button>
+            <button class="operation" onclick="appendOperation('-')">-</button>
+            <button class="operation" onclick="appendOperation('*')">*</button>
+            <button class="operation" onclick="appendOperation('/')">/</button>
+            <!-- Equals and Clear buttons -->
+            <button class="equals" onclick="calculate()">=</button>
+            <button class="clear" onclick="clearDisplay()">C</button>
+        </div>
+    </div>
+    <script>
+        let currentInput = "";
+        let calculationFinished = false;
+
+        function appendNumber(number) {
+            if (calculationFinished) {
+                currentInput = "";
+                calculationFinished = false;
+            }
+            currentInput += number;
+            updateDisplay(currentInput);
+        }
+
+        function appendOperation(operation) {
+            if (!calculationFinished) {
+                currentInput += ` ${operation} `;
+                updateDisplay(currentInput);
+            }
+        }
+
+        function calculate() {
+            try {
+                // Use Function constructor to avoid using eval
+                const result = new Function('return ' + currentInput.replaceAll(' ', ''))();
+                currentInput = result.toString();
+                updateDisplay(result.toLocaleString('en-US'));
+                calculationFinished = true;
+            } catch (e) {
+                updateDisplay("Error");
+                calculationFinished = true;
+            }
+        }
+
+        function clearDisplay() {
+            currentInput = "";
+            updateDisplay(currentInput);
+        }
+
+        function updateDisplay(value) {
+            document.getElementById('display').value = value;
+        }
+    </script>
+</body>
+</html>
