@@ -87,47 +87,58 @@
             <button class="clear" onclick="clearDisplay()">C</button>
         </div>
     </div>
-    <script>
-        let currentInput = "";
-        let calculationFinished = false;
+<script>
+    let currentInput = "";
+    let calculationFinished = false;
 
-        function appendNumber(number) {
-            if (calculationFinished) {
-                currentInput = "";
-                calculationFinished = false;
-            }
-            currentInput += number;
-            updateDisplay(currentInput);
-        }
-
-        function appendOperation(operation) {
-            if (!calculationFinished) {
-                currentInput += ` ${operation} `;
-                updateDisplay(currentInput);
-            }
-        }
-
-        function calculate() {
-            try {
-                // Use Function constructor to avoid using eval
-                const result = new Function('return ' + currentInput.replaceAll(' ', ''))();
-                currentInput = result.toString();
-                updateDisplay(result.toLocaleString('en-US'));
-                calculationFinished = true;
-            } catch (e) {
-                updateDisplay("Error");
-                calculationFinished = true;
-            }
-        }
-
-        function clearDisplay() {
+    function appendNumber(number) {
+        if (calculationFinished) {
             currentInput = "";
+            calculationFinished = false;
+        }
+        currentInput += number;
+        updateDisplay(currentInput);
+    }
+
+    function appendOperation(operation) {
+        if (!calculationFinished) {
+            currentInput += ` ${operation} `;
             updateDisplay(currentInput);
         }
+    }
 
-        function updateDisplay(value) {
-            document.getElementById('display').value = value;
+    function calculate() {
+        try {
+            const result = new Function('return ' + currentInput.replaceAll(' ', ''))();
+            currentInput = result.toString();
+            updateDisplay(result.toLocaleString('en-US'));
+            calculationFinished = true;
+        } catch (e) {
+            updateDisplay("Error");
+            calculationFinished = true;
         }
-    </script>
+    }
+
+    function clearDisplay() {
+        currentInput = "";
+        updateDisplay(currentInput);
+    }
+
+    function updateDisplay(value) {
+        document.getElementById('display').value = value;
+    }
+
+    // Prevent default touch action on buttons to avoid zooming
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const buttons = document.querySelectorAll('#buttons button');
+        buttons.forEach(button => {
+            button.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                // Manually trigger the button click
+                this.click();
+            });
+        });
+    });
+</script>
 </body>
 </html>
